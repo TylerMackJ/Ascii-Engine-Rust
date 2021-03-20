@@ -31,4 +31,17 @@ impl Triangle {
             bot_right: bot_right
         }
     }
+
+    pub fn inside(&self, p: &Coordinate) -> bool {
+        let a0: f64 = area(&self.point[0], &self.point[1], &self.point[2]);
+        let a1: f64 = area(p, &self.point[1], &self.point[2]);
+        let a2: f64 = area(&self.point[0], p, &self.point[2]);
+        let a3: f64 = area(&self.point[0], &self.point[1], p);
+
+        0.001 > a1 + a2 + a3 - a0
+    }
+}
+
+pub fn area(a: &Coordinate, b: &Coordinate, c: &Coordinate) -> f64 {
+    ((a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) / 2.0).abs()
 }
