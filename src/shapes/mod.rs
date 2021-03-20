@@ -1,4 +1,6 @@
-use crate::engine::types::Coordinate;
+pub mod triangle;
+
+use crate::types::*;
 
 pub struct Triangle {
     pub point: [Coordinate; 3],
@@ -33,15 +35,27 @@ impl Triangle {
     }
 
     pub fn inside(&self, p: &Coordinate) -> bool {
-        let a0: f64 = area(&self.point[0], &self.point[1], &self.point[2]);
-        let a1: f64 = area(p, &self.point[1], &self.point[2]);
-        let a2: f64 = area(&self.point[0], p, &self.point[2]);
-        let a3: f64 = area(&self.point[0], &self.point[1], p);
+        let a0: f64 = triangle::area(&self.point[0], &self.point[1], &self.point[2]);
+        let a1: f64 = triangle::area(p, &self.point[1], &self.point[2]);
+        let a2: f64 = triangle::area(&self.point[0], p, &self.point[2]);
+        let a3: f64 = triangle::area(&self.point[0], &self.point[1], p);
 
         0.001 > a1 + a2 + a3 - a0
     }
 }
 
-pub fn area(a: &Coordinate, b: &Coordinate, c: &Coordinate) -> f64 {
-    ((a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) / 2.0).abs()
+pub struct Polygon {
+    pub tri: Vec<Triangle>
+}
+
+impl Polygon {
+    pub fn new(points: Vec<Coordinate>) -> Polygon {
+        let mut tri: Vec<Triangle> = Vec::new();
+        for i in 1..(points.len() - 1) {
+            tri.push(Triangle::new([points[0], points[i], points[i + 1]]))
+        }
+        Polygon {
+            tri: tri
+        }
+    }
 }
