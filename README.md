@@ -1,3 +1,3 @@
 # ASCII-Engine-Rust
 
-Reimplementation of [ASCII Engine](https://github.com/tylermackj/ascii_engine) now written in rust
+Reimplementation of [ASCII Engine](https://github.com/tylermackj/asciiengine) now written in rust
