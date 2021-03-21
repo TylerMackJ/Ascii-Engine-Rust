@@ -1,5 +1,13 @@
 [package]
 name = "ascii_engine"
 version = "1.0.0"
-authors = ["TylerMackJ"]
+authors = ["Tyler Johnson <tylermackj@gmail.com"]
 edition = "2018"
+description = "A console based 2D rendering engine."
+readme = "README.md"
+homepage = "https://tylermackj.github.io/Ascii-Engine-Rust/"
+repository = "https://github.com/TylerMackJ/Ascii-Engine-Rust"
+license = "GPL-3.0"
+license-file = "LICENSE"
+keywords = ["ascii", "console", "graphics", "rendering"]
+catagories = ["command-line-utilities", "graphics", "rendering", "visualization"]
