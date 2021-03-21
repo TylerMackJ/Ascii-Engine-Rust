@@ -9,7 +9,7 @@ pub struct Renderer {
     width: i32,
     height: i32,
     frame_count: usize,
-    poly: Vec<Polygon>
+    pub poly: Vec<Polygon>
 }
 
 impl Renderer {
@@ -91,11 +91,15 @@ impl Renderer {
         println!("{}", frame);
     }
 
-    pub fn polygon(&mut self, points: Vec<Coordinate>) -> &Polygon {
+    pub fn polygon(&mut self, points: Vec<Coordinate>) -> usize {
         self.poly.push(Polygon::new(points));
-        match self.poly.last() {
+        self.poly.len() - 1
+    }
+
+    pub fn get_polygon(&mut self, polygon: usize) -> &mut Polygon {
+        match self.poly.get_mut(polygon) {
             Some(p) => p,
-            None => panic!("Error allocating polygon")
+            None => panic!("Polygon not found")
         }
     }
 }

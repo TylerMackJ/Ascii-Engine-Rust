@@ -10,8 +10,8 @@ pub struct Triangle {
 
 impl Triangle {
     pub fn new(points: [Coordinate; 3]) -> Triangle {
-        let mut top_left = Coordinate {x: points[0].x, y: points[0].y};
-        let mut bot_right = Coordinate {x: points[0].x, y: points[0].y};
+        let mut top_left = points[0];
+        let mut bot_right = points[0];
 
         for i in 1..3 {
             if points[i].x < top_left.x {
@@ -31,6 +31,27 @@ impl Triangle {
             point: points,
             top_left: top_left,
             bot_right: bot_right
+        }
+    }
+
+    pub fn move_point(&mut self, vertex: usize, position: Coordinate) {
+        self.point[vertex] = position;
+
+        self.top_left = self.point[0];
+        self.bot_right = self.point[0];
+
+        for i in 1..3 {
+            if self.point[i].x < self.top_left.x {
+                self.top_left.x = self.point[i].x;
+            } else if self.point[i].x > self.bot_right.x {
+                self.bot_right.x = self.point[i].x
+            }
+
+            if self.point[i].y < self.top_left.y {
+                self.top_left.y = self.point[i].y
+            } else if self.point[i].y > self.bot_right.y {
+                self.bot_right.y = self.point[i].y;
+            }
         }
     }
 
@@ -56,6 +77,45 @@ impl Polygon {
         }
         Polygon {
             tri: tri
+        }
+    }
+
+    pub fn translate_vertex(&mut self, vertex: usize, x_offset: f64, y_offset: f64) {
+        if vertex == 0 {
+            for t in self.tri.iter_mut() {
+                t.move_point(0, Coordinate{
+                    x: t.point[0].x + x_offset,
+                    y: t.point[0].y + y_offset
+                })
+            }
+        } else {
+            // Check if moving last triangle of polygon
+            if vertex - 1 != self.tri.len() {
+                let tri1_option = self.tri.get_mut(vertex - 1);
+                let tri1: &mut Triangle;
+                match tri1_option {
+                    Some(t) => tri1 = t,
+                    None => panic!("Error getting last triangle")
+                }
+                tri1.move_point(1, Coordinate {
+                    x: tri1.point[1].x + x_offset,
+                    y: tri1.point[1].y + y_offset
+                })
+            }
+
+            // Check if moving first triangle of polygon
+            if vertex != 1 {
+                let tri2_option = self.tri.get_mut(vertex - 2);
+                let tri2: &mut Triangle;
+                match tri2_option {
+                    Some(t) => tri2 = t,
+                    None => panic!("Error getting first triangle")
+                }
+                tri2.move_point(2, Coordinate {
+                    x: tri2.point[2].x + x_offset,
+                    y: tri2.point[2].y + y_offset
+                })
+            }
         }
     }
 }
