@@ -61,7 +61,7 @@ impl Triangle {
         let a2: f64 = triangle::area(&self.point[0], p, &self.point[2]);
         let a3: f64 = triangle::area(&self.point[0], &self.point[1], p);
 
-        0.001 > a1 + a2 + a3 - a0
+        0.0000000001 > a1 + a2 + a3 - a0
     }
 }
 
@@ -115,6 +115,36 @@ impl Polygon {
                     x: tri2.point[2].x + x_offset,
                     y: tri2.point[2].y + y_offset
                 })
+            }
+        }
+    }
+
+    pub fn position_vertex(&mut self, vertex: usize, position: Coordinate) {
+        if vertex == 0 {
+            for t in self.tri.iter_mut() {
+                t.move_point(0, position);
+            }
+        } else {
+            // Check if moving last triangle of polygon
+            if vertex - 1 != self.tri.len() {
+                let tri1_option = self.tri.get_mut(vertex - 1);
+                let tri1: &mut Triangle;
+                match tri1_option {
+                    Some(t) => tri1 = t,
+                    None => panic!("Error getting last triangle")
+                }
+                tri1.move_point(1, position);
+            }
+
+            // Check if moving first triangle of polygon
+            if vertex != 1 {
+                let tri2_option = self.tri.get_mut(vertex - 2);
+                let tri2: &mut Triangle;
+                match tri2_option {
+                    Some(t) => tri2 = t,
+                    None => panic!("Error getting first triangle")
+                }
+                tri2.move_point(2, position);
             }
         }
     }

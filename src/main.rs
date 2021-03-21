@@ -18,5 +18,12 @@ fn main() {
 
     r.draw();
 
+    r.get_polygon(p).position_vertex(2, Coordinate {
+        x: 10.0,
+        y: 5.0
+    });
+
+    r.draw();
+
 
 }

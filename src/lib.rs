@@ -70,7 +70,7 @@ impl Renderer {
                     }
 
                     // Draw Triangle Corners
-                    
+                    /*
                     if self.in_bounds(&t.top_left) {
                         frame.insert((t.top_left.x as i32 + (t.top_left.y as i32 * self.width)) as usize, '*');
                         frame.remove((t.top_left.x as i32 + (t.top_left.y as i32 * self.width) + 1) as usize);
@@ -79,7 +79,7 @@ impl Renderer {
                         frame.insert((t.bot_right.x as i32 + (t.bot_right.y as i32 * self.width)) as usize, '*');
                         frame.remove((t.bot_right.x as i32 + (t.bot_right.y as i32 * self.width) + 1) as usize);
                     }
-                    
+                    */
                 }
             }
         }

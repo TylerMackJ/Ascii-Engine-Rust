@@ -6,4 +6,4 @@ Reimplementation of [ASCII Engine](https://github.com/tylermackj/asciiengine) no
 
 1. `git clone https://github.com/TylerMackJ/Ascii-Engine-Rust.git`
 2. `cd Ascii-Engine-Rust`
-3. `cargo r`
+3. `cargo r --release`
