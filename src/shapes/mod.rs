@@ -34,7 +34,7 @@ impl Triangle {
         }
     }
 
-    pub fn move_point(&mut self, vertex: usize, position: Coordinate) {
+    pub fn position_vertex(&mut self, vertex: usize, position: Coordinate) {
         self.point[vertex] = position;
 
         self.top_left = self.point[0];
@@ -53,6 +53,16 @@ impl Triangle {
                 self.bot_right.y = self.point[i].y;
             }
         }
+    }
+
+    pub fn rotate_vertex(&mut self, vertex: usize, rotation_point: Coordinate, radians: f64) {
+        let x: f64 = self.point[vertex].x - rotation_point.x;
+        let y: f64 = self.point[vertex].y - rotation_point.y;
+
+        self.position_vertex(vertex, Coordinate {
+            x: (x * radians.cos()) - (y * radians.sin()) + rotation_point.x,
+            y: (x * radians.sin()) + (y * radians.cos()) + rotation_point.y
+        });
     }
 
     pub fn inside(&self, p: &Coordinate) -> bool {
@@ -83,7 +93,7 @@ impl Polygon {
     pub fn translate_vertex(&mut self, vertex: usize, x_offset: f64, y_offset: f64) {
         if vertex == 0 {
             for t in self.tri.iter_mut() {
-                t.move_point(0, Coordinate{
+                t.position_vertex(0, Coordinate{
                     x: t.point[0].x + x_offset,
                     y: t.point[0].y + y_offset
                 })
@@ -97,7 +107,7 @@ impl Polygon {
                     Some(t) => tri1 = t,
                     None => panic!("Error getting last triangle")
                 }
-                tri1.move_point(1, Coordinate {
+                tri1.position_vertex(1, Coordinate {
                     x: tri1.point[1].x + x_offset,
                     y: tri1.point[1].y + y_offset
                 })
@@ -111,7 +121,7 @@ impl Polygon {
                     Some(t) => tri2 = t,
                     None => panic!("Error getting first triangle")
                 }
-                tri2.move_point(2, Coordinate {
+                tri2.position_vertex(2, Coordinate {
                     x: tri2.point[2].x + x_offset,
                     y: tri2.point[2].y + y_offset
                 })
@@ -122,7 +132,7 @@ impl Polygon {
     pub fn position_vertex(&mut self, vertex: usize, position: Coordinate) {
         if vertex == 0 {
             for t in self.tri.iter_mut() {
-                t.move_point(0, position);
+                t.position_vertex(0, position);
             }
         } else {
             // Check if moving last triangle of polygon
@@ -133,7 +143,7 @@ impl Polygon {
                     Some(t) => tri1 = t,
                     None => panic!("Error getting last triangle")
                 }
-                tri1.move_point(1, position);
+                tri1.position_vertex(1, position);
             }
 
             // Check if moving first triangle of polygon
@@ -144,7 +154,15 @@ impl Polygon {
                     Some(t) => tri2 = t,
                     None => panic!("Error getting first triangle")
                 }
-                tri2.move_point(2, position);
+                tri2.position_vertex(2, position);
+            }
+        }
+    }
+
+    pub fn rotate_around(&mut self, rotation_point: Coordinate, radians: f64) {
+        for t in self.tri.iter_mut() {
+            for i in 0..3 {
+                t.rotate_vertex(i, rotation_point, radians);
             }
         }
     }
