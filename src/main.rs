@@ -16,7 +16,7 @@ fn main() {
     r.draw();
 
     for i in 0..2000 {
-        let center: Coordinate = r.get_polygon(p).get_center();
+        let center = r.get_polygon(p).get_center();
         r.get_polygon(p).rotate_around(center, std::f64::consts::PI / 200.0);
 
         r.get_polygon(p).translate((i as f64 / 100.0).sin() * 0.1, (i as f64 / 100.0).cos() * 0.1);
@@ -25,6 +25,4 @@ fn main() {
 
         thread::sleep(time::Duration::from_millis(10));
     }
-
-
 }

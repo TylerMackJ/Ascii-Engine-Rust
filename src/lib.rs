@@ -1,6 +1,6 @@
 pub mod types;
 
-pub mod shapes;
+mod shapes;
 
 use crate::shapes::*;
 use crate::types::*;
@@ -22,7 +22,7 @@ impl Renderer {
         }
     }
 
-    pub fn info(&self) {
+    fn info(&self) {
         let mut tri_count: usize = 0;
         for p in self.poly.iter() {
             tri_count += p.tri.len();
@@ -30,7 +30,7 @@ impl Renderer {
         println!("Dimensions: {}, {}\nFrame: {}\nPolys: {} | Tris: {}", self.width, self.height, self.frame_count, self.poly.len(), tri_count);
     }
 
-    pub fn in_bounds(&self, c: &Coordinate) -> bool {
+    fn in_bounds(&self, c: &Coordinate) -> bool {
         c.x >= 0.0 && c.y >= 0.0 && c.x < (self.width as f64 - 1.0) && c.y < (self.height as f64) // Subtract one to no overwrite \n
     }
 
