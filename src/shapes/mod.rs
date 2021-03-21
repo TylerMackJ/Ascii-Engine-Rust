@@ -1,6 +1,9 @@
 pub mod triangle;
+pub mod triangulation;
+pub mod polygon;
 
 use crate::types::*;
+use crate::shapes::triangulation::*;
 
 pub struct Triangle {
     pub point: [Coordinate; 3],
@@ -65,13 +68,20 @@ impl Triangle {
         });
     }
 
-    pub fn inside(&self, p: &Coordinate) -> bool {
+    pub fn is_inside(&self, p: &Coordinate) -> bool {
         let a0: f64 = triangle::area(&self.point[0], &self.point[1], &self.point[2]);
         let a1: f64 = triangle::area(p, &self.point[1], &self.point[2]);
         let a2: f64 = triangle::area(&self.point[0], p, &self.point[2]);
         let a3: f64 = triangle::area(&self.point[0], &self.point[1], p);
 
         0.0000000001 > a1 + a2 + a3 - a0
+    }
+
+    pub fn get_center(&self) -> Coordinate {
+        Coordinate {
+            x: (self.point[0].x + self.point[1].x + self.point[2].x) / 3.0,
+            y: (self.point[0].y + self.point[1].y + self.point[2].y) / 3.0
+        }
     }
 }
 
@@ -80,11 +90,62 @@ pub struct Polygon {
 }
 
 impl Polygon {
-    pub fn new(points: Vec<Coordinate>) -> Polygon {
+    pub fn new(mut points: Vec<Coordinate>) -> Polygon {
+        /*
         let mut tri: Vec<Triangle> = Vec::new();
         for i in 1..(points.len() - 1) {
             tri.push(Triangle::new([points[0], points[i], points[i + 1]]))
         }
+        Polygon {
+            tri: tri
+        }
+        */
+        let mut tri: Vec<Triangle> = Vec::new();
+
+        while points.len() > 3 {
+            for p in 0..(points.len() - 2) {
+                // Attempt to create a triangle out of points p, p+1, p+2 and make sure its center is inside the polygon
+                println!("p: {}", p);
+                if polygon::is_inside(&points, Triangle::new([points[p], points[p + 1], points[p + 2]]).get_center()) {
+                    // Check if line p -> p+2 intersects any lines generating by any other points
+                    let tri_line: [Coordinate; 2] = [points[p], points[p+2]];
+                    let mut good_line: bool = true;
+                    // Get one end of the line to compare to
+                    for line_end1 in 0..points.len() - 1 {
+                        // Check if the line end is not part of the triangle
+                        if line_end1 != p && line_end1 != p + 1 && line_end1 != p + 2 {
+                            // Get the second end of the line
+                            for line_end2 in line_end1 + 1..points.len() {
+                                // Check if the other end of the line is not part of the triangle
+                                if line_end2 != p && line_end2 != p + 1 && line_end2 != p + 2 {
+                                    let compare_line: [Coordinate; 2] = [points[line_end1], points[line_end2]];
+                                    println!("Comparing {} -> {} to {} -> {}", p, p + 2, line_end1, line_end2);
+                                    if is_intersecting(&tri_line, &compare_line) {
+                                        println!("Intersecting!");
+                                        good_line = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            if good_line == false {
+                                break;
+                            }
+                        }
+                    }
+                    if good_line {
+                        println!("{} -> {} is a good line!", p, p + 2);
+                        tri.push(Triangle::new([points[p], points[p+1], points[p+2]]));
+                        points.remove(p+1);
+                        break;
+                    } else {
+                        println!("Bad line!");
+                    }
+                } else {
+                    println!("Center of triangle is outside the polygon!");
+                }
+            }
+        }
+        tri.push(Triangle::new([points[0], points[1], points[2]]));
         Polygon {
             tri: tri
         }

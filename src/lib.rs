@@ -1,6 +1,6 @@
 pub mod types;
 
-mod shapes;
+pub mod shapes;
 
 use crate::shapes::*;
 use crate::types::*;
@@ -51,7 +51,7 @@ impl Renderer {
             for t in p.tri.iter() {
                 for x in std::cmp::max(t.top_left.x as i32, 0)..std::cmp::min((t.bot_right.x + 1.0) as i32, self.width - 1) {
                     for y in std::cmp::max(t.top_left.y as i32, 0)..std::cmp::min((t.bot_right.y + 1.0) as i32, self.height) {
-                        if t.inside(&Coordinate{x: x as f64, y: y as f64}) {
+                        if t.is_inside(&Coordinate{x: x as f64, y: y as f64}) {
                             frame.insert((x + (y * self.width)) as usize, '#');
                             frame.remove((x + (y * self.width) + 1) as usize);
                         }
