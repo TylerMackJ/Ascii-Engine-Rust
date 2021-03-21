@@ -90,6 +90,30 @@ impl Polygon {
         }
     }
 
+    pub fn get_center(&self) -> Coordinate {
+        let mut x_total: f64 = 0.0;
+        let mut y_total: f64 = 0.0;
+
+        let tri_option = self.tri.get(0);
+        let tri: &Triangle;
+        match tri_option {
+            Some(t) => tri = t,
+            None => panic!("Error finding triangle 0")
+        }
+        x_total += tri.point[0].x + tri.point[1].x;
+        y_total += tri.point[0].y + tri.point[1].y;
+
+        for t in self.tri.iter() {
+            x_total += t.point[2].x;
+            y_total += t.point[2].y;
+        }
+
+        Coordinate {
+            x: x_total / (self.tri.len() + 2) as f64,
+            y: y_total / (self.tri.len() + 2) as f64
+        }
+    }
+
     pub fn translate_vertex(&mut self, vertex: usize, x_offset: f64, y_offset: f64) {
         if vertex == 0 {
             for t in self.tri.iter_mut() {
@@ -155,6 +179,17 @@ impl Polygon {
                     None => panic!("Error getting first triangle")
                 }
                 tri2.position_vertex(2, position);
+            }
+        }
+    }
+
+    pub fn translate(&mut self, x_offset: f64, y_offset: f64) {
+        for t in self.tri.iter_mut() {
+            for i in 0..3 {
+                t.position_vertex(i, Coordinate {
+                    x: t.point[i].x + x_offset,
+                    y: t.point[i].y + y_offset
+                })
             }
         }
     }

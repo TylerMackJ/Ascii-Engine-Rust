@@ -4,7 +4,7 @@ use ascii_engine::types::*;
 use std::{thread, time};
 
 fn main() {
-    let mut r: Renderer = Renderer::new(20, 10);
+    let mut r: Renderer = Renderer::new(40, 20);
 
     let p: usize = r.polygon(vec![
         Coordinate{x: 0.0, y: 0.0}, 
@@ -16,10 +16,10 @@ fn main() {
     r.draw();
 
     for i in 0..2000 {
-        r.get_polygon(p).rotate_around(Coordinate {
-            x: 10.0,
-            y: 5.0
-        }, std::f64::consts::PI / 100.0);
+        let center: Coordinate = r.get_polygon(p).get_center();
+        r.get_polygon(p).rotate_around(center, std::f64::consts::PI / 200.0);
+
+        r.get_polygon(p).translate((i as f64 / 100.0).sin() * 0.1, (i as f64 / 100.0).cos() * 0.1);
 
         r.draw();
 

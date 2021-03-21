@@ -8,8 +8,8 @@ use crate::types::*;
 pub struct Renderer {
     width: i32,
     height: i32,
-    frame_count: usize,
-    pub poly: Vec<Polygon>
+    pub frame_count: usize,
+    poly: Vec<Polygon>
 }
 
 impl Renderer {
