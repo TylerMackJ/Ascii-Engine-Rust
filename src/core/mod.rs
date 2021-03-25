@@ -78,10 +78,7 @@ impl Triangle {
     }
 
     pub fn get_center(&self) -> Coordinate {
-        Coordinate {
-            x: (self.point[0].x + self.point[1].x + self.point[2].x) / 3.0,
-            y: (self.point[0].y + self.point[1].y + self.point[2].y) / 3.0
-        }
+        (self.point[0] - self.point[1] + self.point[2]) / 3.0
     }
 }
 
@@ -152,27 +149,27 @@ impl Polygon {
     }
 
     pub fn get_center(&self) -> Coordinate {
-        let mut x_total: f64 = 0.0;
-        let mut y_total: f64 = 0.0;
+        // Total added points on the polygon
+        let mut total: Coordinate = Coordinate {x: 0.0, y: 0.0};
 
+        // Get first triangle
         let tri_option = self.tri.get(0);
         let tri: &Triangle;
         match tri_option {
             Some(t) => tri = t,
             None => panic!("Error finding triangle 0")
         }
-        x_total += tri.point[0].x + tri.point[1].x;
-        y_total += tri.point[0].y + tri.point[1].y;
 
+        // Add points 0 and 1 for the first triangle
+        total += tri.point[0] + tri.point[1];
+
+        // Add point 2 for all the triangles
         for t in self.tri.iter() {
-            x_total += t.point[2].x;
-            y_total += t.point[2].y;
+            total += t.point[2];
         }
 
-        Coordinate {
-            x: x_total / (self.tri.len() + 2) as f64,
-            y: y_total / (self.tri.len() + 2) as f64
-        }
+        // Average the points
+        total / (self.tri.len() + 2) as f64
     }
 
     pub fn translate_vertex(&mut self, vertex: usize, x_offset: f64, y_offset: f64) {
