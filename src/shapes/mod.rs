@@ -1,4 +1,4 @@
-use crate::Coordinate;
+use crate::types::Coordinate;
 
 pub fn circle(center: Coordinate, radius: usize, vertice_count: usize) -> Vec<Coordinate> {
     let mut points: Vec<Coordinate> = Vec::with_capacity(vertice_count);
