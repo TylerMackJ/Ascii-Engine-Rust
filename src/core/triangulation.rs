@@ -1,4 +1,4 @@
-use crate::types::*;
+use crate::Coordinate;
 
 pub fn is_intersecting(line1: &[Coordinate; 2], line2: &[Coordinate; 2]) -> bool {
     let dir1: i8 = direction(&line1[0], &line1[1], &line2[0]);

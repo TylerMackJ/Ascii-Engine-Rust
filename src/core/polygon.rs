@@ -1,4 +1,5 @@
-use crate::shapes::*;
+use crate::core::*;
+use crate::Coordinate;
 
 pub fn is_inside(vertices: &Vec<Coordinate>, point: Coordinate) -> bool {
     let horizontal: [Coordinate; 2] = [point, Coordinate {
