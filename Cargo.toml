@@ -1,7 +1,7 @@
 [package]
 name = "ascii_engine"
 version = "1.0.0"
-authors = ["Tyler Johnson <tylermackj@gmail.com"]
+authors = ["Tyler Johnson <tylermackj@gmail.com>"]
 edition = "2018"
 description = "A console based 2D rendering engine."
 readme = "README.md"
